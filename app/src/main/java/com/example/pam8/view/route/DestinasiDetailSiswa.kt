@@ -1,0 +1,10 @@
+package com.example.pam8.view.route
+
+import com.example.pam8.R
+
+object DestinasiDetailSiswa : DestinasiNavigasi {
+    override val route = "detail_siswa"
+    override val titleRes = R.string.detail_siswa
+    const val itemIdArg = "idSiswa"
+    val routeWithArgs = "$route/{$itemIdArg}"
+}
