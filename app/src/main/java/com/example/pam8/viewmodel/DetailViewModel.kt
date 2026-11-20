@@ -21,7 +21,8 @@ class DetailViewModel(
         checkNotNull(savedStateHandle[DestinasiDetailSiswa.itemIdArg])
 
 
-
-
 }
 
+data class DetailSiswaUiState(
+    val detailSiswa: DetailSiswa = DetailSiswa()
+)
