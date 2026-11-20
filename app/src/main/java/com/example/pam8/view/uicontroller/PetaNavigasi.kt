@@ -58,5 +58,23 @@ fun HostNavigasi(
             )
         }
 
+        //edit 2 : tambahkan 2 composable route
+        composable(
+            route = DestinasiDetailSiswa.routeWithArgs,
+            arguments = listOf(navArgument(itemIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            DetailSiswaScreen(
+                navigateBack = {
+                    navController.popBackStack()
+                },
+                navigateEditSiswa = { id ->
+                    navController.navigate("${DestinasiEditSiswa.route}/$id")
+                }
+            )
+        }
 
+
+    }
 }
