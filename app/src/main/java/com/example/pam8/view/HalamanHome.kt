@@ -1,8 +1,8 @@
 package com.example.pam8.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,21 +34,27 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pam8.R
 import com.example.pam8.room.Siswa
-import com.example.pam8.uicontroller.DestinasiHome
-import com.example.pam8.uicontroller.SiswaTopAppBar
+import com.example.pam8.view.route.DestinasiHome
 import com.example.pam8.viewmodel.HomeViewModel
-import com.example.pam8.viewmodel.PenyediaViewModel
+import com.example.pam8.viewmodel.provider.PenyediaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
+    //edit 5
+    navigateToItemUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
+    viewModel: HomeViewModel = viewModel(
+        factory = PenyediaViewModel.Factory
+    )
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(
+            scrollBehavior.nestedScrollConnection
+        ),
         topBar = {
             SiswaTopAppBar(
                 title = stringResource(DestinasiHome.titleRes),
@@ -60,7 +66,9 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(R.dimen.padding_large))
+                modifier = Modifier.padding(
+                    dimensionResource(id = R.dimen.padding_large)
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -70,8 +78,11 @@ fun HomeScreen(
         },
     ) { innerPadding ->
         val homeUiState by viewModel.homeUiState.collectAsState()
+
         BodyHomeScreen(
             itemSiswa = homeUiState.listSiswa,
+            //edit 6
+            onSiswaClick = navigateToItemUpdate,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -79,24 +90,34 @@ fun HomeScreen(
     }
 }
 
+
 @Composable
 fun BodyHomeScreen(
     itemSiswa: List<Siswa>,
+    //edit 3 : parameter onSiswaClick
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-    ){
-        if (itemSiswa.isEmpty()){
+    ) {
+        if (itemSiswa.isEmpty()) {
             Text(
                 text = stringResource(R.string.deskripsi_no_item),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge
             )
         } else {
             ListSiswa(
                 itemSiswa = itemSiswa,
-                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_small))
+                //edit 4
+                onSiswaClick = { onSiswaClick(it.id) },
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(
+                        id = R.dimen.padding_small
+                    )
+                )
             )
         }
     }
@@ -105,16 +126,25 @@ fun BodyHomeScreen(
 @Composable
 fun ListSiswa(
     itemSiswa: List<Siswa>,
+    //edit 1 : tambahkan parameter onSiswaClick
+    onSiswaClick: (Siswa) -> Unit,
     modifier: Modifier = Modifier
-){
-    LazyColumn(
-        modifier = modifier
-    ){
-        items(items = itemSiswa, key = { it.id }) { person ->
+) {
+    LazyColumn(modifier = modifier) {
+        items(
+            items = itemSiswa,
+            key = { it.id }
+        ) { person ->
             DataSiswa(
                 siswa = person,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.padding_small))
+                    .padding(
+                        dimensionResource(id = R.dimen.padding_small)
+                    )
+                    //edit 2 : tambahkan modifikasi clickable
+                    .clickable {
+                        onSiswaClick(person)
+                    }
             )
         }
     }
@@ -124,32 +154,42 @@ fun ListSiswa(
 fun DataSiswa(
     siswa: Siswa,
     modifier: Modifier = Modifier
-){
+) {
     Card(
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ){
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
+    ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
-        ){
+            modifier = Modifier.padding(
+                dimensionResource(id = R.dimen.padding_large)
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                dimensionResource(id = R.dimen.padding_small)
+            )
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 Text(
                     text = siswa.nama,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleLarge
                 )
+
                 Spacer(Modifier.weight(1f))
+
                 Icon(
                     imageVector = Icons.Default.Phone,
-                    contentDescription = null,
+                    contentDescription = null
                 )
+
                 Text(
                     text = siswa.telpon,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+
             Text(
                 text = siswa.alamat,
                 style = MaterialTheme.typography.titleMedium
