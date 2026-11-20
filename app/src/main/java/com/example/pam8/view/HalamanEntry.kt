@@ -23,8 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pam8.R
-import com.example.pam8.uicontroller.DestinasiEntry
-import com.example.pam8.uicontroller.SiswaTopAppBar
+import com.example.pam8.view.route.DestinasiEntry
 import com.example.pam8.viewmodel.DetailSiswa
 import com.example.pam8.viewmodel.EntryViewModel
 import com.example.pam8.viewmodel.PenyediaViewModel
